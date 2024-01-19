@@ -71,19 +71,25 @@ function scheduler_content_moderation_integration_scheduler_publish_process($ent
   }
 
   $state = $entity->publish_state->value;
-  $entity->publish_state->value = NULL;
-
+  $languages = $entity->getTranslationLanguages();
   /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModerationInterface $type_plugin */
   $type_plugin = $moderation_information->getWorkflowForEntity($entity)->getTypePlugin();
-  try {
-    $type_plugin->getTransitionFromStateToState($entity->moderation_state->value, $state);
-    $entity->set('moderation_state', $state)->save();
-    return 1;
+
+  foreach ($languages as $id => $language) {
+    $translation_entity = $entity->getTranslation($id);
+    $translation_entity->publish_state->value = NULL;
+    try {
+      $type_plugin->getTransitionFromStateToState($translation_entity->moderation_state->value, $state);
+      $translation_entity->set('moderation_state', $state)->save();
+    }
+    catch (\InvalidArgumentException $exception) {
+      // If transition is not valid, throw exception.
+      return -1;
+    }
   }
-  catch (\InvalidArgumentException $exception) {
-    // If transition is not valid, throw exception.
-    return -1;
-  }
+
+  return 1;
+
 }
 
 /**
@@ -104,17 +110,23 @@ function scheduler_content_moderation_integration_scheduler_unpublish_process($e
   }
 
   $state = $entity->unpublish_state->value;
-  $entity->unpublish_state->value = NULL;
-
+  $languages = $entity->getTranslationLanguages();
   /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModerationInterface $type_plugin */
   $type_plugin = $moderation_information->getWorkflowForEntity($entity)->getTypePlugin();
-  try {
-    $type_plugin->getTransitionFromStateToState($entity->moderation_state->value, $state);
-    $entity->set('moderation_state', $state)->save();
-    return 1;
+
+  foreach ($languages as $id => $language) {
+    $translation_entity = $entity->getTranslation($id);
+    $translation_entity->unpublish_state->value = NULL;
+    try {
+      $type_plugin->getTransitionFromStateToState($translation_entity->moderation_state->value, $state);
+      $translation_entity->set('moderation_state', $state)->save();
+    }
+    catch (\InvalidArgumentException $exception) {
+      // If transition is not valid, throw exception.
+      return -1;
+    }
   }
-  catch (\InvalidArgumentException $exception) {
-    // If transition is not valid, throw exception.
-    return -1;
-  }
+
+  return 1;
+
 }
