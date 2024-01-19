@@ -18,8 +18,8 @@ function scheduler_content_moderation_integration_scheduler_hide_publish_date($f
   $return = FALSE;
   if ($moderation_information->isModeratedEntity($entity)) {
     $fieldStorageDefition = \Drupal::service('entity_field.manager')
-        ->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())['publish_state']
-        ->getFieldStorageDefinition();
+      ->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())['publish_state']
+      ->getFieldStorageDefinition();
     $options = _scheduler_content_moderation_integration_states_values($fieldStorageDefition, $entity);
     // If no moderation transitions are available for publish_state then hide
     // the publish_on scheduler field.
@@ -44,8 +44,8 @@ function scheduler_content_moderation_integration_scheduler_hide_unpublish_date(
     // If no moderation transitions are available for unpublish_state then hide
     // the unpublish_on scheduler field.
     $fieldStorageDefition = \Drupal::service('entity_field.manager')
-        ->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())['unpublish_state']
-        ->getFieldStorageDefinition();
+      ->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())['unpublish_state']
+      ->getFieldStorageDefinition();
     $options = _scheduler_content_moderation_integration_states_values($fieldStorageDefition, $entity);
     $options_without_none = array_diff_key($options, ['_none' => '']);
     $return = (count($options_without_none) == 0);
