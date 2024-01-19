@@ -79,12 +79,12 @@ function scheduler_content_moderation_integration_scheduler_publish_process($ent
     $translation_entity = $entity->getTranslation($id);
     $translation_entity->publish_state->value = NULL;
     try {
-        $type_plugin->getTransitionFromStateToState($translation_entity->moderation_state->value, $state);
-        $translation_entity->set('moderation_state', $state)->save();
+      $type_plugin->getTransitionFromStateToState($translation_entity->moderation_state->value, $state);
+      $translation_entity->set('moderation_state', $state)->save();
     }
     catch (\InvalidArgumentException $exception) {
-        // If transition is not valid, throw exception.
-        return -1;
+      // If transition is not valid, throw exception.
+      return -1;
     }
   }
 
@@ -118,12 +118,12 @@ function scheduler_content_moderation_integration_scheduler_unpublish_process($e
     $translation_entity = $entity->getTranslation($id);
     $translation_entity->unpublish_state->value = NULL;
     try {
-        $type_plugin->getTransitionFromStateToState($translation_entity->moderation_state->value, $state);
-        $translation_entity->set('moderation_state', $state)->save();
+      $type_plugin->getTransitionFromStateToState($translation_entity->moderation_state->value, $state);
+      $translation_entity->set('moderation_state', $state)->save();
     }
     catch (\InvalidArgumentException $exception) {
-        // If transition is not valid, throw exception.
-        return -1;
+      // If transition is not valid, throw exception.
+      return -1;
     }
   }
 
